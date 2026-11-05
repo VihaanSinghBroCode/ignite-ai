@@ -17,6 +17,7 @@ import {
   killRunning,
   openBrowser,
   startDevServer,
+  stopProcess,
 } from './src/executor.js';
 import { extraPackages, findMissingPackages } from './src/policy.js';
 import { DEFAULT_EFFORT, DEFAULT_MAX_TOKENS, DEFAULT_MODELS, ProviderError, createLLM } from './src/providers.js';
@@ -258,7 +259,7 @@ async function runDevServer({ root, llm, open }) {
   let stopping = false;
   const stop = (signal) => {
     stopping = true;
-    child.kill(signal);
+    stopProcess(child, signal);
   };
   process.on('SIGINT', stop);
   process.on('SIGTERM', stop);

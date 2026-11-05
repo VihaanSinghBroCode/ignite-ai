@@ -44,9 +44,27 @@ export class StepError extends Error {
 
 const running = new Set();
 
+// The dev server runs in its own process group so a stop reaches every process
+// it started. npm runs scripts through a shell, and on Linux a signal sent to npm
+// alone did not always get past that shell, which left Vite running.
+const OWN_GROUP = process.platform !== 'win32';
+
+/** Stops a child, and its whole process group if it has one. */
+export function stopProcess(child, signal = 'SIGTERM') {
+  if (child.ownGroup) {
+    try {
+      process.kill(-child.pid, signal);
+      return;
+    } catch {
+      // The group is already gone, so fall through to the child itself.
+    }
+  }
+  child.kill(signal);
+}
+
 /** Stops any child that is still running. Called on exit and on cancel. */
 export function killRunning(signal = 'SIGTERM') {
-  for (const child of running) child.kill(signal);
+  for (const child of running) stopProcess(child, signal);
 }
 
 function track(child) {
@@ -174,8 +192,10 @@ export function startDevServer(cwd, { apiPort, onReady }) {
       cwd,
       env: childEnv({ PORT: String(apiPort), ...(process.stdout.isTTY ? { FORCE_COLOR: '1' } : {}) }),
       shell: process.platform === 'win32', // npm is a .cmd file on Windows, which needs a shell.
+      detached: OWN_GROUP,
     }),
   );
+  child.ownGroup = OWN_GROUP && child.pid !== undefined;
 
   child.stdout.pipe(process.stdout, { end: false });
   child.stderr.pipe(process.stderr, { end: false });

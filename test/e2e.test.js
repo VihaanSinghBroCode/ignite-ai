@@ -220,7 +220,8 @@ describe('anthropic: the whole chain', { timeout: 300_000 }, () => {
     assert.equal(await portOpen(port), true);
 
     run.child.kill('SIGTERM');
-    await run.exited;
+    const outcome = await Promise.race([run.exited, new Promise((resolve) => setTimeout(() => resolve('hung'), 20_000))]);
+    assert.notEqual(outcome, 'hung', 'the CLI did not exit within 20s of SIGTERM');
     await waitFor(async () => !(await portOpen(port)), { timeout: 10_000, label: 'the Vite port to close' });
   });
 });
