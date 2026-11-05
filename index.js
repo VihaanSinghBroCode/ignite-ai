@@ -82,7 +82,7 @@ async function resolveCredentials(requested) {
       message: 'Which API do you want to use? No API key was found in your environment.',
       options: [
         { value: 'anthropic', label: 'Anthropic', hint: DEFAULT_MODELS.anthropic },
-        { value: 'openai', label: 'OpenAI', hint: DEFAULT_MODELS.openai },
+        { value: 'openai', label: 'OpenAI', hint: `${DEFAULT_MODELS.openai}, experimental` },
       ],
     });
     if (p.isCancel(provider)) exitCancelled();
@@ -254,8 +254,8 @@ async function runDevServer({ root, llm, open }) {
     },
   });
 
-  // A terminal Ctrl-C reaches the whole process group on its own. Forwarding also
-  // covers a signal sent to this process alone, as a supervisor would do.
+  // The dev server has its own process group, so a terminal Ctrl-C reaches only
+  // this process, which passes it on to the whole group.
   let stopping = false;
   const stop = (signal) => {
     stopping = true;
@@ -304,6 +304,9 @@ async function main(words, options) {
   });
 
   p.log.step(`Building ${pc.cyan(prompt)} with ${pc.dim(llm.model)}`);
+  if (llm.provider === 'openai') {
+    p.log.warn('OpenAI support is experimental: it has been tested only against a simulated API. Please report problems on GitHub.');
+  }
 
   const { files, warnings } = await llmStep('Writing your app', (ui) =>
     generateApp({ llm, prompt, name, ui, signal: abort.signal }),
