@@ -67,12 +67,10 @@ flowchart LR
     C -->|no| R["Repair prompt"]
     R --> B
     C -->|yes| D["Write files"]
-    D --> E["npm install"]
-    E --> F["Build the frontend"]
-    F --> G["Boot the API server"]
-    E & F & G -->|fails| X["Fix prompt<br/>with the error log"]
+    D --> E["Install, build<br/>and boot"]
+    E -->|fails| X["Fix prompt<br/>with the error log"]
     X --> D
-    G -->|passes| H["Dev server running"]
+    E -->|passes| H["Your app,<br/>running"]
 ```
 
 **One JSON object, checked strictly.** The model returns a single object that maps file paths to file contents. Structured outputs can't describe an object whose keys are file paths, so the system prompt states the contract and Ignite verifies the result. Output that fails a check goes back to the model along with the reason.
