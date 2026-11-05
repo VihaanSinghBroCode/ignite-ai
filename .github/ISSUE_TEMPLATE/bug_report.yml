@@ -1,0 +1,55 @@
+name: Bug report
+description: Ignite crashed, hung or did something wrong.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. If the problem is in an app Ignite generated rather than in Ignite itself, a feature request or a prompt suggestion may fit better. For security issues, please follow SECURITY.md instead.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: input
+    id: command
+    attributes:
+      label: Command
+      description: The exact command you ran, including your prompt.
+      placeholder: npx ignite-ai "Build a collaborative to-do list"
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Terminal output
+      description: Paste the output. Remove anything private first.
+      render: shell
+  - type: input
+    id: ignite-version
+    attributes:
+      label: Ignite version
+      description: Run `npx ignite-ai --version`.
+    validations:
+      required: true
+  - type: input
+    id: node-version
+    attributes:
+      label: Node version
+      description: Run `node --version`.
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options: [macOS, Linux, Windows, Other]
+    validations:
+      required: true
+  - type: input
+    id: model
+    attributes:
+      label: Provider and model
+      placeholder: anthropic, claude-opus-5-5

@@ -1,0 +1,51 @@
+{
+  "name": "ignite-ai",
+  "version": "0.1.0",
+  "description": "Type one sentence. Get a running full-stack React app.",
+  "homepage": "https://github.com/VihaanSinghBroCode/ignite-ai#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VihaanSinghBroCode/ignite-ai.git"
+  },
+  "bugs": {
+    "url": "https://github.com/VihaanSinghBroCode/ignite-ai/issues"
+  },
+  "type": "module",
+  "bin": {
+    "ignite": "index.js",
+    "ignite-ai": "index.js"
+  },
+  "files": [
+    "index.js",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "test": "node --test test/unit.test.js",
+    "test:e2e": "node --test --test-concurrency=1 test/e2e.test.js",
+    "prepublishOnly": "npm test"
+  },
+  "keywords": [
+    "ai",
+    "cli",
+    "codegen",
+    "react",
+    "vite",
+    "scaffold",
+    "anthropic",
+    "claude",
+    "openai"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.5.0",
+    "@clack/prompts": "^1.8.1",
+    "commander": "^15.0.0",
+    "openai": "^7.51.0",
+    "picocolors": "^1.1.1"
+  }
+}
